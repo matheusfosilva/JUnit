@@ -12,17 +12,24 @@ import br.com.alura.tdd.modelo.Funcionario;
 class BonusServiceTest {
 
 	@Test
-	void bonusDeveriaSer0ParaFuncionarioComSalarioMuitoAlto() {
+	void bonusDeveriaSerZeroParaFuncionarioComSalarioMuitoAlto() {
 
 		BonusService service = new BonusService();
-		BigDecimal bonus = service.calcularBonus(new Funcionario("", LocalDate.now(), new BigDecimal("25000")));
 
-		assertEquals(new BigDecimal("0.00"), bonus);
+//		assertThrows(IllegalArgumentException.class,
+//				() -> service.calcularBonus(new Funcionario("", LocalDate.now(), new BigDecimal("25000"))));
+
+		try {
+			service.calcularBonus(new Funcionario("", LocalDate.now(), new BigDecimal("25000")));
+			fail("Nao lancou a excessao");
+		} catch (Exception e) {
+			assertEquals("Funcionário com salario maior que 10k nao pode receber bonus", e.getMessage());
+		}
 
 	}
-	
+
 	@Test
-	void bonusDeveriaSer10PorcentoDoSalario() {
+	void bonusDeveriaSerDezPorcentoDoSalario() {
 
 		BonusService service = new BonusService();
 		BigDecimal bonus = service.calcularBonus(new Funcionario("", LocalDate.now(), new BigDecimal("2500")));
@@ -30,10 +37,9 @@ class BonusServiceTest {
 		assertEquals(new BigDecimal("250.00"), bonus);
 
 	}
-	
-	
+
 	@Test
-	void bonusDeveriaSer10PorcentoParaSalarioDeExatamente10Mil() {
+	void bonusDeveriaSerDezPorcentoParaSalarioDeExatamente10Mil() {
 
 		BonusService service = new BonusService();
 		BigDecimal bonus = service.calcularBonus(new Funcionario("", LocalDate.now(), new BigDecimal("10000")));
